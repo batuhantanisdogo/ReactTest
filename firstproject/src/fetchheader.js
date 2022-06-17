@@ -9,7 +9,7 @@ export default function Fetchheader() {
         fetch(`https://localhost:5001/Home/GetUser/`,{method:"GET",headers:{'Content-Type':'application/json','Authorization':'Bearer ' + token}})
         .then((res) => res.json())
         .then((result) => {
-            SetDatas([...result.data])
+            SetDatas(result.data)
             console.log(datas);
         })
     

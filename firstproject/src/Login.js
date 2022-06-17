@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Loader from './loader'
 export default class  extends Component {
-    state = {isSubmit:false,isLogin:false,firstName:"",surName:"",datas:[],isSuccess:false,token:"",department:false}
+    state = {isSubmit:false,isLogin:false,firstName:"",surName:"",datas:[],isSuccess:false,token:"",department:false,depList:[]}
     setSubmit = async() => {
        
         this.setState({isSubmit:true,isLogin:false})
@@ -21,7 +21,7 @@ export default class  extends Component {
                         isSubmit:false,
                         firstName:result.data.name,
                         surName:result.data.lastName,
-                        datas:[...res_.data],
+                        datas:res_.data,
                         token:result.data.token
                     })
                 }
@@ -43,13 +43,15 @@ export default class  extends Component {
         })
     }
     addDescription(){
-        console.log(this.state.token);
-         fetch(`https://localhost:5001/Home/AddDepartment/`,{method:"POST",body:{"description":this.state.description},headers:{'Content-Type':'application/json','Authorization':'Bearer ' + this.state.token}})
+        console.log(this.state.description);
+         fetch(`https://localhost:5001/Home/AddDepartment`,{method:"POST",body:JSON.stringify({"description":this.state.description}),headers:{'Content-Type':'application/json','Authorization':'Bearer ' + this.state.token}})
         .then((res) => res.json())
         .then(result => {
-            if(result.data.isSuccessfull != null){
+            console.log(result);
+            if(result.data.isSuccessfull != false){
                 this.setState({
-                    department:true
+                    department:true,
+                    depList:result.data
                 })
             }
             
@@ -92,7 +94,17 @@ export default class  extends Component {
             </div>
         }
         {
-            this.state.department && <p>Başarıyla Description Eklendi</p>
+            this.state.department && 
+            <div>
+                <p>Başarıyla Description Eklendi</p>
+                {
+                    this.state.depList.map((val) => (
+                        <p>{val.description}</p>
+                    ))
+                }
+
+                
+            </div>
         }
     </div>
     
